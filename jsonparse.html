@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h1>The XMLHttpRequest Object</h1>
+
+<button type="button" onclick="loadDoc()">Request data</button>
+
+<p id="demo"></p>
+
+
+<p>List of items (clean values)</p>
+<ul id="sensorList">
+
+</ul>
+
+<script>
+function loadDoc() {
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      document.getElementById("demo").innerHTML = "Raw Data: " + this.responseText;
+      const ul = document.getElementById("sensorList");
+
+
+      const responseAsJson = JSON.parse(this.responseText);
+
+      for(let item of responseAsJson){
+        const dataAsJson = JSON.parse(item.data);
+        let li = document.createElement("li");
+        li.appendChild(document.createTextNode("temp: " + dataAsJson.temp + " - tempScale: "+dataAsJson.tempScale));
+        ul.appendChild(li);
+      }
+    }
+  };
+  xhttp.open("GET", "http://localhost:8095/api/sensor_records", true);
+  xhttp.send();
+}
+
+
+</script>
+
+</body>
+</html>
